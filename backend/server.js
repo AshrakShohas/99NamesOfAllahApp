@@ -368,16 +368,153 @@ app.post('/api/reminders/trigger-friday', async (req, res) => {
     title: '🌟 Friday Continuous Wazifa Reminder',
     name,
     scheduleInfo: remindersConfig.schedules.fridayReminder,
-    userNote: 'Friday special recitation: Between farz and sunnah at Friday afternoon prayer.'
+    userNote: 'Special Friday Prescription (p. 44): Recite 100 times between the Farz and the Sunnah of the Friday prayer. Allah will esteem you in the eyes of others. Also, reciting AL-AWWAL (#73) 1,000 times for 40 consecutive Fridays brings righteous offspring and family reunion.'
   });
 
   const result = await dispatchEmail({
     to: emailTo,
-    subject: `🌟 Friday Dhikr Reminder: Recite ${name.transliteration} for Esteem & Blessing`,
+    subject: `🌟 Friday Dhikr Reminder: Recite ${name.transliteration} (${name.wazifa} - 100x)`,
     htmlContent: html
   });
 
   res.json(result);
+});
+
+// 6b. Trigger Morning Post-Fajr Reminder Manually
+app.post('/api/reminders/trigger-fajr', async (req, res) => {
+  const emailTo = req.body.targetEmail || [remindersConfig.userEmail, remindersConfig.wifeEmail].filter(Boolean).join(', ');
+  if (!emailTo) return res.status(400).json({ error: 'Please set your email address first.' });
+
+  const name = namesData.find(n => n.id === 2) || namesData[1]; // Ar-Rahim
+  const html = buildReminderEmailHtml({
+    title: '🌅 Morning Post-Fajr Wazifa Reminder',
+    name,
+    scheduleInfo: remindersConfig.schedules.fajrReminder,
+    userNote: 'Morning Daily Prescription (p. 21): Recite 100 times after the morning prayer. You will find all the world friendly to you and be secure from all tribulations.'
+  });
+
+  const result = await dispatchEmail({
+    to: emailTo,
+    subject: `🌅 Morning Post-Fajr Dhikr: Recite ${name.transliteration} (100x)`,
+    htmlContent: html
+  });
+
+  res.json(result);
+});
+
+// 6c. Trigger Thursday Post-Zuhr Reminder Manually
+app.post('/api/reminders/trigger-thursday', async (req, res) => {
+  const emailTo = req.body.targetEmail || [remindersConfig.userEmail, remindersConfig.wifeEmail].filter(Boolean).join(', ');
+  if (!emailTo) return res.status(400).json({ error: 'Please set your email address first.' });
+
+  const name = namesData.find(n => n.id === 26) || namesData[25]; // As-Sami
+  const html = buildReminderEmailHtml({
+    title: '🕌 Thursday Post-Zuhr Wazifa Reminder',
+    name,
+    scheduleInfo: remindersConfig.schedules.thursdayZuhrReminder,
+    userNote: 'Thursday Prescription (p. 43): Recite 100 times after Zuhr prayer on Thursday in complete silence without speaking to anyone. Allah will bestow upon you whatever desire you hold in your heart.'
+  });
+
+  const result = await dispatchEmail({
+    to: emailTo,
+    subject: `🕌 Thursday Post-Zuhr Dhikr: Recite ${name.transliteration} in Silence (100x)`,
+    htmlContent: html
+  });
+
+  res.json(result);
+});
+
+// 6d. Trigger Family & Love Wazifa Reminder (Al-Wadud)
+app.post('/api/reminders/trigger-family', async (req, res) => {
+  const emailTo = req.body.targetEmail || [remindersConfig.userEmail, remindersConfig.wifeEmail].filter(Boolean).join(', ');
+  if (!emailTo) return res.status(400).json({ error: 'Please set your email address first.' });
+
+  const name = namesData.find(n => n.id === 47) || namesData[46]; // Al-Wadud
+  const html = buildReminderEmailHtml({
+    title: '❤️ Special Family Wazifa: Mutual Love & Harmony (Al-Wadūd)',
+    name,
+    scheduleInfo: { title: 'Spouse & Family Harmony Prescription' },
+    userNote: 'Special Prescription for Husband & Wife (p. 64): He who repeats this Name 1,000 times over food and eats it together with his spouse, all disputes between them will disappear and mutual love will flourish.'
+  });
+
+  const result = await dispatchEmail({
+    to: emailTo,
+    subject: `❤️ Special Wazifa for Ashrak & Shanjida: Recite ${name.transliteration} over Food`,
+    htmlContent: html
+  });
+
+  res.json(result);
+});
+
+// 6e. Trigger All Types of Reminders in Sequence
+app.post('/api/reminders/trigger-all', async (req, res) => {
+  const emailTo = req.body.targetEmail || [remindersConfig.userEmail, remindersConfig.wifeEmail].filter(Boolean).join(', ');
+  if (!emailTo) return res.status(400).json({ error: 'Please set your email address first.' });
+
+  const results = [];
+
+  // 1. Friday Reminder (Al-Basir #27)
+  const nameBasir = namesData.find(n => n.id === 27);
+  const res1 = await dispatchEmail({
+    to: emailTo,
+    subject: `[1/4] 🌟 Friday Dhikr Reminder: Recite ${nameBasir.transliteration} (100x)`,
+    htmlContent: buildReminderEmailHtml({
+      title: '🌟 [Type 1] Friday Continuous Wazifa Reminder',
+      name: nameBasir,
+      scheduleInfo: remindersConfig.schedules.fridayReminder,
+      userNote: 'Friday special recitation: Between farz and sunnah at Friday afternoon prayer.'
+    })
+  });
+  results.push({ type: 'Friday Jumu\'ah Wazifa', ...res1 });
+
+  // 2. Daily Post-Fajr Reminder (Ar-Rahim #2)
+  const nameRahim = namesData.find(n => n.id === 2);
+  const res2 = await dispatchEmail({
+    to: emailTo,
+    subject: `[2/4] 🌅 Morning Post-Fajr Dhikr: Recite ${nameRahim.transliteration} (100x)`,
+    htmlContent: buildReminderEmailHtml({
+      title: '🌅 [Type 2] Daily Post-Fajr Wazifa Reminder',
+      name: nameRahim,
+      scheduleInfo: remindersConfig.schedules.fajrReminder,
+      userNote: 'Morning Daily Prescription (p. 21): Recite 100 times after Fajr for friendly relations and peace.'
+    })
+  });
+  results.push({ type: 'Morning Post-Fajr Wazifa', ...res2 });
+
+  // 3. Thursday Post-Zuhr Reminder (As-Sami #26)
+  const nameSami = namesData.find(n => n.id === 26);
+  const res3 = await dispatchEmail({
+    to: emailTo,
+    subject: `[3/4] 🕌 Thursday Post-Zuhr Dhikr: Recite ${nameSami.transliteration} (100x)`,
+    htmlContent: buildReminderEmailHtml({
+      title: '🕌 [Type 3] Thursday Post-Zuhr Wazifa Reminder',
+      name: nameSami,
+      scheduleInfo: remindersConfig.schedules.thursdayZuhrReminder,
+      userNote: 'Thursday Prescription (p. 43): Recite 100 times after Zuhr in complete silence for fulfillment of desires.'
+    })
+  });
+  results.push({ type: 'Thursday Post-Zuhr Wazifa', ...res3 });
+
+  // 4. Family Harmony & Love Reminder (Al-Wadud #47)
+  const nameWadud = namesData.find(n => n.id === 47);
+  const res4 = await dispatchEmail({
+    to: emailTo,
+    subject: `[4/4] ❤️ Family Harmony Wazifa: Recite ${nameWadud.transliteration} over Food (1,000x)`,
+    htmlContent: buildReminderEmailHtml({
+      title: '❤️ [Type 4] Family Harmony Wazifa (Al-Wadūd)',
+      name: nameWadud,
+      scheduleInfo: { title: 'Spouse & Family Harmony Prescription' },
+      userNote: 'Spouse Prescription (p. 64): Repeat 1,000 times over food and eat together so disputes disappear and love flourishes.'
+    })
+  });
+  results.push({ type: 'Family Love & Harmony Wazifa', ...res4 });
+
+  res.json({
+    success: true,
+    totalDispatched: results.length,
+    recipients: emailTo,
+    results
+  });
 });
 
 // 7. Preview Latest Saved Email in Browser

@@ -62,7 +62,7 @@ export default function ReminderSettings() {
     }
   };
 
-  const handleSendTest = async (type = 'test') => {
+  const handleSendTest = async (type = 'all') => {
     if (!config.userEmail) {
       alert('Please enter your email address first!');
       return;
@@ -70,7 +70,13 @@ export default function ReminderSettings() {
     setLoading(true);
     setTestResult(null);
     try {
-      const endpoint = type === 'friday' ? '/api/reminders/trigger-friday' : '/api/reminders/send-test';
+      let endpoint = '/api/reminders/trigger-all';
+      if (type === 'friday') endpoint = '/api/reminders/trigger-friday';
+      else if (type === 'fajr') endpoint = '/api/reminders/trigger-fajr';
+      else if (type === 'thursday') endpoint = '/api/reminders/trigger-thursday';
+      else if (type === 'family') endpoint = '/api/reminders/trigger-family';
+      else if (type === 'test') endpoint = '/api/reminders/send-test';
+
       const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -283,34 +289,59 @@ export default function ReminderSettings() {
               Test your email notification immediately or trigger the Friday wazifa reminder on-demand.
             </p>
 
-            <div className="space-y-2.5">
+            <div className="space-y-2">
               <button
                 type="button"
-                onClick={() => handleSendTest('friday')}
+                onClick={() => handleSendTest('all')}
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 text-xs font-bold transition"
+                className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-neutral-950 font-bold text-xs shadow-lg transition"
               >
-                <Sparkles className="w-4 h-4" />
-                Trigger Friday Reminder Now
+                <Sparkles className="w-4 h-4 text-neutral-950" />
+                🚀 Send All 4 Email Types Now (Complete Test)
               </button>
 
-              <button
-                type="button"
-                onClick={() => handleSendTest('test')}
-                disabled={loading}
-                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-neutral-200 text-xs font-semibold transition border border-neutral-700"
-              >
-                <Send className="w-4 h-4" />
-                Send General Test Reminder
-              </button>
+              <div className="grid grid-cols-2 gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={() => handleSendTest('friday')}
+                  disabled={loading}
+                  className="py-2 px-2.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 text-[11px] font-semibold transition"
+                >
+                  🌟 Friday Wazifa
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleSendTest('fajr')}
+                  disabled={loading}
+                  className="py-2 px-2.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 text-[11px] font-semibold transition"
+                >
+                  🌅 Post-Fajr Wazifa
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleSendTest('thursday')}
+                  disabled={loading}
+                  className="py-2 px-2.5 rounded-xl bg-blue-500/15 hover:bg-blue-500/25 text-blue-300 border border-blue-500/30 text-[11px] font-semibold transition"
+                >
+                  🕌 Thursday Zuhr
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleSendTest('family')}
+                  disabled={loading}
+                  className="py-2 px-2.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/30 text-[11px] font-semibold transition"
+                >
+                  ❤️ Family (Al-Wadūd)
+                </button>
+              </div>
 
               <a
                 href="/api/reminders/preview-latest"
                 target="_blank"
                 rel="noreferrer"
-                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-neutral-950 hover:bg-neutral-800 text-neutral-300 text-xs font-semibold transition border border-neutral-800"
+                className="w-full flex items-center justify-center gap-2 py-2 px-4 rounded-xl bg-neutral-950 hover:bg-neutral-800 text-neutral-300 text-[11px] font-semibold transition border border-neutral-800"
               >
-                <Eye className="w-4 h-4" />
+                <Eye className="w-3.5 h-3.5" />
                 Preview Last Email in Browser
               </a>
             </div>
