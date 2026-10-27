@@ -1,0 +1,18 @@
+{
+  "name": "The 99 Names of Allah (أسماء الله الحسنى)",
+  "short_name": "99 Names",
+  "description": "Personal 3D Book & Situational Dhikr Assistant based on Shems Friedlander (1978)",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b0f17",
+  "theme_color": "#0b0f17",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

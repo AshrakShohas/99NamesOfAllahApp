@@ -1,0 +1,36 @@
+{
+  "userEmail": "ashraks97@gmail.com",
+  "wifeEmail": "shanjidaonna@gmail.com",
+  "userName": "Ashrak & Shanjida (Onna)",
+  "smtp": {
+    "service": "gmail",
+    "host": "smtp.gmail.com",
+    "port": 465,
+    "secure": true,
+    "user": "ashraks97@gmail.com",
+    "pass": ""
+  },
+  "schedules": {
+    "fridayReminder": {
+      "enabled": true,
+      "time": "09:00",
+      "nameId": 27,
+      "title": "Friday Jumu'ah Wazifa Reminder",
+      "description": "Special wazaif prescribed for Friday: Al-Basir (100x between Farz & Sunnah for esteem) & Al-Awwal (1,000x for 40 Fridays)."
+    },
+    "fajrReminder": {
+      "enabled": true,
+      "time": "05:30",
+      "nameId": 2,
+      "title": "Daily Post-Fajr Wazifa Reminder",
+      "description": "Recite Ya-Rahim 100 times after Fajr prayer for peace, ease, and friendly relations with all."
+    },
+    "thursdayZuhrReminder": {
+      "enabled": true,
+      "time": "13:00",
+      "nameId": 26,
+      "title": "Thursday Post-Zuhr Wazifa Reminder",
+      "description": "Recite Ya-Sami 100 times in silence after Zuhr on Thursdays for fulfillment of your desires."
+    }
+  }
+}

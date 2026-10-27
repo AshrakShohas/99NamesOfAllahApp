@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="grad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#2a1b12"/>
+      <stop offset="100%" stop-color="#0b0f17"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="50%" stop-color="#eab308"/>
+      <stop offset="100%" stop-color="#a16207"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="128" fill="url(#grad)" stroke="url(#gold)" stroke-width="12"/>
+  <circle cx="256" cy="256" r="190" fill="none" stroke="url(#gold)" stroke-width="4" stroke-dasharray="10 8"/>
+  <circle cx="256" cy="256" r="175" fill="none" stroke="url(#gold)" stroke-width="2"/>
+  <text x="50%" y="58%" text-anchor="middle" font-family="'Amiri', 'Traditional Arabic', serif" font-size="160" font-weight="bold" fill="url(#gold)">
+    الله
+  </text>
+  <text x="50%" y="78%" text-anchor="middle" font-family="system-ui, sans-serif" font-size="28" font-weight="bold" fill="#fef08a" letter-spacing="4">
+    99 NAMES
+  </text>
+</svg>
