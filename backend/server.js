@@ -92,7 +92,13 @@ function saveRemindersConfig() {
 
 // Nodemailer Transporter Helper
 function createTransporter() {
-  const { user, pass, host, port, secure, service } = remindersConfig.smtp;
+  const user = process.env.SMTP_USER || remindersConfig.smtp.user;
+  const pass = process.env.SMTP_PASS || remindersConfig.smtp.pass;
+  const host = process.env.SMTP_HOST || remindersConfig.smtp.host || 'smtp.gmail.com';
+  const port = process.env.SMTP_PORT || remindersConfig.smtp.port || 465;
+  const secure = remindersConfig.smtp.secure !== undefined ? remindersConfig.smtp.secure : true;
+  const service = remindersConfig.smtp.service || 'gmail';
+
   if (!user || !pass) {
     return null; // Mock / Local preview mode
   }
@@ -103,9 +109,9 @@ function createTransporter() {
     });
   }
   return nodemailer.createTransport({
-    host: host || 'smtp.gmail.com',
-    port: port || 465,
-    secure: secure !== undefined ? secure : true,
+    host,
+    port,
+    secure,
     auth: { user, pass }
   });
 }
