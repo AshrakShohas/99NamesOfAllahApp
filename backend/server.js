@@ -390,16 +390,21 @@ app.get('/api/reminders/preview-latest', (req, res) => {
   }
 });
 
-// 8. Stream high-res original scan from Google Drive folder
+// 8. Stream high-res original scan from Google Drive folder (with fallback to book_pages)
 app.get('/scans/:filename', (req, res) => {
   const filename = req.params.filename;
   const filePath = path.join(GDRIVE_SCANS_PATH, filename);
   if (fs.existsSync(filePath)) {
     res.setHeader('Content-Type', 'image/jpeg');
-    res.sendFile(filePath);
-  } else {
-    res.status(404).send('Scan not found in Google Drive folder.');
+    return res.sendFile(filePath);
   }
+  // Fallback to bundled page scan
+  const fallback = path.join(CROPPED_PAGES_PATH, 'page_020.jpg');
+  if (fs.existsSync(fallback)) {
+    res.setHeader('Content-Type', 'image/jpeg');
+    return res.sendFile(fallback);
+  }
+  res.status(404).send('Scan not found.');
 });
 
 // 9. Stream individual cropped book page
